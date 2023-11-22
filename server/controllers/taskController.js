@@ -41,6 +41,7 @@ module.exports.getTasks = async (req, res, next) => {
 
 module.exports.updateTask = async (req, res, next) => {
   try {
+    console.log(req.body);
     const task = await Task.findById(req.params.id);
     if (!task) {
       res.status(404);
@@ -51,6 +52,7 @@ module.exports.updateTask = async (req, res, next) => {
         req.body,
         { new: true }
       );
+      console.log(updatedTask);
       if (updatedTask) {
         const tasks = req.user.tasks.filter(
           (task) => task._id !== req.params.id

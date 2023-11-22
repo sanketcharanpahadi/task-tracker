@@ -5,7 +5,7 @@ import { create } from "zustand";
 const useTodoStore = create((set) => ({
   tasks: [],
 
-  addTodo: async (title, completed, token) => {
+  addTasks: async (title, completed, token) => {
     console.log(title, completed, token);
     try {
       const response = await axios.post(
@@ -28,14 +28,40 @@ const useTodoStore = create((set) => ({
       console.log(error.message);
     }
   },
+  initialiseTasks: async (token) => {
+    try {
+      const response = await axios.get("http://localhost:3000/api/tasks", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      console.log(response.data);
+      set((state) => ({
+        tasks: response.data,
+      }));
+    } catch (error) {
+      console.log(error.message);
+    }
+  },
 
-  // updateTodo: (todoId, updatedTodo) => {
-  //   set((state) => ({
-  //     todos: state.todos.map((todo) =>
-  //       todo.id === todoId ? { ...todo, ...updatedTodo } : todo
-  //     ),
-  //   }));
-  // },
+  updateTask: async (todoId, updatedTodo, token) => {
+    const response = await axios.put(
+      `http://localhost:3000/api/tasks/${todoId}`,
+      {
+        ...updatedTodo,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    set((state) => ({
+      tasks: state.tasks.map((todo) => {
+        return todo._id.toString() === todoId.toString() ? response.data : todo;
+      }),
+    }));
+  },
 
   // removeTodo: (todoId) => {
   //   set((state) => ({

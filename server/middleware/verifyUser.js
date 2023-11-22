@@ -4,7 +4,7 @@ const User = require("../models/User");
 module.exports.verifyUser = async (req, res, next) => {
   let token;
   try {
-    console.log(req.headers.authorization);
+    // console.log(req.headers.authorization);
     if (
       req.headers.authorization &&
       req.headers.authorization.startsWith("Bearer")
